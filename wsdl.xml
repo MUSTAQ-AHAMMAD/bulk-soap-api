@@ -1,0 +1,919 @@
+This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<wsdl:definitions xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:errors="http://xmlns.oracle.com/adf/svc/errors/" xmlns:orafault="http://xmlns.oracle.com/oracleas/schema/oracle-fault-11_0" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:types="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/" name="MiscellaneousReceiptService" targetNamespace="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/">
+<wsdl:documentation xmlns:oer="http://xmlns.oracle.com/oer">
+<name>Receivables Miscellaneous Receipt Service</name>
+<description>The payments that should not be applied to debit items and are not received in exchange for goods or services, such as refunds and interest income. For example, interest income earned a company's business bank account with Wells Fargo.</description>
+<docCategories>
+<category>Integration</category>
+</docCategories>
+<oer:lifecycle>Active</oer:lifecycle>
+<oer:compatibility>Supported - Backward Compatibility Assured</oer:compatibility>
+<oer:category name="lba">
+<value>FinTop-Financial Products</value>
+<value>FinTop-Financial Products : FinArTop-Public Receivables</value>
+<value>FinTop-Financial Products : FinArTop-Public Receivables : FinArReceipts-Receipts</value>
+<value>FinTop-Financial Products : FinArTop-Public Receivables : FinArReceipts-Receipts : FinArRcptsMiscReceipts-Miscellaneous Receipts</value>
+</oer:category>
+<oer:operation name="createMiscellaneousReceipt">
+<description>This method is used to create miscellaneous receipt in Receivables</description>
+<oer:parameters>
+<oer:parameter name="miscellaneousReceipt" description="This is a Service Data Object for Receivables Miscellaneous Receipt Service"/>
+<oer:return description="Returns the Service Data Object of create miscellaneous receipt operation"/>
+</oer:parameters>
+</oer:operation>
+<oer:operation name="findMiscellaneousReceipt">
+<description>This method is used to find an existing credit memo in Receivables</description>
+<oer:parameters>
+<oer:parameter name="findCriteria" description="The criteria used to limit your query result, such as the filter (where clause), the fetch size, etc."/>
+<oer:parameter name="findControl" description="Find Control. Not currently used."/>
+<oer:return description="Returns the Service Data Object of find miscellaneous receipt operation that satisfy the inbound criteria"/>
+</oer:parameters>
+</oer:operation>
+<oer:operation name="getDfltObjAttrHints">
+<description>An operation to retrieve user interface hints, such as the service data object label and object attribute labels, for the specified service data object and locale. As a prerequisite, invoke the getEntityList operation defined on this service to get the list of possible values for the viewName request payload element.</description>
+<oer:parameters>
+<oer:parameter name="viewName" description="The service view usage name, an internal name for the service data object. Specify the value of the <name> element from the getEntityList operation response payload."/>
+<oer:parameter name="localeName" description="The locale to use when evaluating locale-based user interface hints. The localeName is in ISO 639-1 format."/>
+<oer:return description="The label and user interface hints for the specified service data object and its attributes in a name-value pair format."/>
+</oer:parameters>
+</oer:operation>
+<oer:operation name="getServiceLastUpdateTime">
+<description>An operation that returns the date and time when the schema files referenced in the service definition last changed.</description>
+<oer:parameters>
+<oer:return description="The date and time when the service definition last changed in ISO 8601 format."/>
+</oer:parameters>
+</oer:operation>
+<oer:operation name="getEntityList">
+<description>An operation to get the list of service data objects defined on this service.</description>
+<oer:parameters>
+<oer:return description="A list of service data objects defined on this service. For each service data object, the result includes the QName, internal name, and Boolean values indicating whether create, update, merge, and delete operations can be performed on the object."/>
+</oer:parameters>
+</oer:operation>
+</wsdl:documentation>
+<plnk:partnerLinkType name="MiscellaneousReceiptService">
+<plnk:role name="MiscellaneousReceiptServiceProvider">
+<plnk:portType name="tns:MiscellaneousReceiptService"/>
+</plnk:role>
+<plnk:role name="MiscellaneousReceiptServiceRequestor">
+<plnk:portType name="tns:MiscellaneousReceiptServiceResponse"/>
+</plnk:role>
+</plnk:partnerLinkType>
+<wsp:Policy xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" wsu:Id="MiscellaneousReceiptServiceResponse_Fault_Policy"/>
+<wsp:Policy xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" wsu:Id="MiscellaneousReceiptServiceResponse_Input_Policy">
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
+<sp:Header Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+</sp:EncryptedParts>
+</wsp:Policy>
+<wsp:Policy xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" wsu:Id="MiscellaneousReceiptServiceResponse_Output_Policy">
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:EncryptedParts>
+</wsp:Policy>
+<wsp:Policy xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" wsu:Id="MiscellaneousReceiptServiceSoapHttpPort_Fault_Policy">
+<wsp:ExactlyOne>
+<wsp:All/>
+<wsp:All/>
+<wsp:All/>
+<wsp:All/>
+</wsp:ExactlyOne>
+</wsp:Policy>
+<wsp:Policy xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" wsu:Id="MiscellaneousReceiptServiceSoapHttpPort_Input_Policy">
+<wsp:ExactlyOne>
+<wsp:All>
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
+<sp:Header Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+</sp:EncryptedParts>
+</wsp:All>
+<wsp:All>
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
+<sp:Header Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+</sp:EncryptedParts>
+</wsp:All>
+<wsp:All>
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
+<sp:Header Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+<sp:Header Name="SignatureConfirmation" Namespace="http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd"/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+</sp:EncryptedParts>
+</wsp:All>
+<wsp:All>
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
+<sp:Header Namespace="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+<sp:Header Name="fmw-context" Namespace="http://xmlns.oracle.com/fmw/context/1.0"/>
+</sp:EncryptedParts>
+</wsp:All>
+</wsp:ExactlyOne>
+</wsp:Policy>
+<wsp:Policy xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" wsu:Id="MiscellaneousReceiptServiceSoapHttpPort_Output_Policy">
+<wsp:ExactlyOne>
+<wsp:All>
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:EncryptedParts>
+</wsp:All>
+<wsp:All>
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:EncryptedParts>
+</wsp:All>
+<wsp:All>
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:EncryptedParts>
+</wsp:All>
+<wsp:All>
+<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:SignedParts>
+<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<sp:Body/>
+</sp:EncryptedParts>
+</wsp:All>
+</wsp:ExactlyOne>
+</wsp:Policy>
+<wsp:Policy xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" wsu:Id="fast_infoset_service_policy">
+<wsOptfiser:OptimizedFastInfosetSerialization xmlns:wsOptfiser="http://java.sun.com/xml/ns/wsit/2006/09/policy/fastinfoset/service" enabled="true"/>
+</wsp:Policy>
+<wsp:Policy xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" wsu:Id="wsaddr_policy">
+<wsaw:UsingAddressing xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"/>
+</wsp:Policy>
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="wsmtom_policy">
+<wsoma:OptimizedMimeSerialization xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"/>
+</wsp:Policy>
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="wss11_saml_or_username_token_with_message_protection_service_policy">
+<wsp:ExactlyOne>
+<wsp:All>
+<sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:ProtectionToken>
+<wsp:Policy>
+<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+<wsp:Policy>
+<sp:RequireThumbprintReference/>
+<sp:WssX509V3Token11/>
+</wsp:Policy>
+</sp:X509Token>
+</wsp:Policy>
+</sp:ProtectionToken>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+<sp:IncludeTimestamp/>
+<sp:ProtectTokens/>
+<sp:OnlySignEntireHeadersAndBody/>
+</wsp:Policy>
+</sp:SymmetricBinding>
+<sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:SamlToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssSamlV11Token11/>
+</wsp:Policy>
+</sp:SamlToken>
+</wsp:Policy>
+</sp:SignedSupportingTokens>
+<sp:EndorsingSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssX509V3Token11/>
+</wsp:Policy>
+</sp:X509Token>
+</wsp:Policy>
+</sp:EndorsingSupportingTokens>
+<sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:MustSupportRefKeyIdentifier/>
+<sp:MustSupportRefIssuerSerial/>
+<sp:MustSupportRefThumbprint/>
+<sp:MustSupportRefEncryptedKey/>
+<sp:RequireSignatureConfirmation/>
+</wsp:Policy>
+</sp:Wss11>
+</wsp:All>
+<wsp:All>
+<sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:ProtectionToken>
+<wsp:Policy>
+<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+<wsp:Policy>
+<sp:RequireThumbprintReference/>
+<sp:WssX509V3Token11/>
+</wsp:Policy>
+</sp:X509Token>
+</wsp:Policy>
+</sp:ProtectionToken>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128Exn256/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+<sp:IncludeTimestamp/>
+<sp:ProtectTokens/>
+<sp:OnlySignEntireHeadersAndBody/>
+</wsp:Policy>
+</sp:SymmetricBinding>
+<sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:SamlToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssSamlV11Token11/>
+</wsp:Policy>
+</sp:SamlToken>
+</wsp:Policy>
+</sp:SignedSupportingTokens>
+<sp:EndorsingSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssX509V3Token11/>
+</wsp:Policy>
+</sp:X509Token>
+</wsp:Policy>
+</sp:EndorsingSupportingTokens>
+<sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:MustSupportRefKeyIdentifier/>
+<sp:MustSupportRefIssuerSerial/>
+<sp:MustSupportRefThumbprint/>
+<sp:MustSupportRefEncryptedKey/>
+<sp:RequireSignatureConfirmation/>
+</wsp:Policy>
+</sp:Wss11>
+</wsp:All>
+<wsp:All>
+<sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:ProtectionToken>
+<wsp:Policy>
+<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+<wsp:Policy>
+<sp:RequireThumbprintReference/>
+<sp:WssX509V3Token11/>
+</wsp:Policy>
+</sp:X509Token>
+</wsp:Policy>
+</sp:ProtectionToken>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+<sp:IncludeTimestamp/>
+<sp:OnlySignEntireHeadersAndBody/>
+</wsp:Policy>
+</sp:SymmetricBinding>
+<sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssUsernameToken10/>
+</wsp:Policy>
+</sp:UsernameToken>
+</wsp:Policy>
+</sp:SignedSupportingTokens>
+<sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:MustSupportRefKeyIdentifier/>
+<sp:MustSupportRefIssuerSerial/>
+<sp:MustSupportRefThumbprint/>
+<sp:MustSupportRefEncryptedKey/>
+<sp:RequireSignatureConfirmation/>
+</wsp:Policy>
+</sp:Wss11>
+</wsp:All>
+<wsp:All>
+<sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:ProtectionToken>
+<wsp:Policy>
+<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+<wsp:Policy>
+<sp:RequireThumbprintReference/>
+<sp:WssX509V3Token11/>
+</wsp:Policy>
+</sp:X509Token>
+</wsp:Policy>
+</sp:ProtectionToken>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128Exn256/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+<sp:IncludeTimestamp/>
+<sp:OnlySignEntireHeadersAndBody/>
+</wsp:Policy>
+</sp:SymmetricBinding>
+<sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssUsernameToken10/>
+</wsp:Policy>
+</sp:UsernameToken>
+</wsp:Policy>
+</sp:SignedSupportingTokens>
+<sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:MustSupportRefKeyIdentifier/>
+<sp:MustSupportRefIssuerSerial/>
+<sp:MustSupportRefThumbprint/>
+<sp:MustSupportRefEncryptedKey/>
+<sp:RequireSignatureConfirmation/>
+</wsp:Policy>
+</sp:Wss11>
+</wsp:All>
+<wsp:All>
+<sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:TransportToken>
+<wsp:Policy>
+<sp:HttpsToken RequireClientCertificate="false">
+<wsp:Policy/>
+</sp:HttpsToken>
+</wsp:Policy>
+</sp:TransportToken>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+<sp:IncludeTimestamp/>
+</wsp:Policy>
+</sp:TransportBinding>
+<sp:SupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:SamlToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssSamlV11Token10/>
+</wsp:Policy>
+</sp:SamlToken>
+</wsp:Policy>
+</sp:SupportingTokens>
+</wsp:All>
+<wsp:All>
+<sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:TransportToken>
+<wsp:Policy>
+<sp:HttpsToken RequireClientCertificate="false">
+<wsp:Policy/>
+</sp:HttpsToken>
+</wsp:Policy>
+</sp:TransportToken>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+<sp:IncludeTimestamp/>
+</wsp:Policy>
+</sp:TransportBinding>
+<sp:SupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:SamlToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssSamlV20Token11/>
+</wsp:Policy>
+</sp:SamlToken>
+</wsp:Policy>
+</sp:SupportingTokens>
+</wsp:All>
+<wsp:All>
+<sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:TransportToken>
+<wsp:Policy>
+<sp:HttpsToken RequireClientCertificate="false">
+<wsp:Policy/>
+</sp:HttpsToken>
+</wsp:Policy>
+</sp:TransportToken>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+<sp:IncludeTimestamp/>
+</wsp:Policy>
+</sp:TransportBinding>
+<sp:SupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssUsernameToken10/>
+</wsp:Policy>
+</sp:UsernameToken>
+</wsp:Policy>
+</sp:SupportingTokens>
+</wsp:All>
+<wsp:All>
+<sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:TransportToken>
+<wsp:Policy>
+<sp:HttpsToken RequireClientCertificate="false">
+<wsp:Policy/>
+</sp:HttpsToken>
+</wsp:Policy>
+</sp:TransportToken>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+</wsp:Policy>
+</sp:TransportBinding>
+</wsp:All>
+<wsp:All>
+<sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:TransportToken>
+<wsp:Policy>
+<sp:HttpsToken RequireClientCertificate="false">
+<wsp:Policy>
+<osp:HttpJwtAuthentication xmlns:osp="http://schemas.oracle.com/ws/2012/01/wssecuritypolicy"/>
+</wsp:Policy>
+</sp:HttpsToken>
+</wsp:Policy>
+</sp:TransportToken>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+</wsp:Policy>
+</sp:TransportBinding>
+</wsp:All>
+</wsp:ExactlyOne>
+</wsp:Policy>
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="wss11_saml_token_with_message_protection_client_policy">
+<sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:ProtectionToken>
+<wsp:Policy>
+<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+<wsp:Policy>
+<sp:RequireThumbprintReference/>
+<sp:WssX509V3Token11/>
+</wsp:Policy>
+</sp:X509Token>
+</wsp:Policy>
+</sp:ProtectionToken>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+<sp:IncludeTimestamp/>
+<sp:ProtectTokens/>
+<sp:OnlySignEntireHeadersAndBody/>
+</wsp:Policy>
+</sp:SymmetricBinding>
+<sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:SamlToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssSamlV11Token11/>
+</wsp:Policy>
+</sp:SamlToken>
+</wsp:Policy>
+</sp:SignedSupportingTokens>
+<sp:EndorsingSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssX509V3Token11/>
+</wsp:Policy>
+</sp:X509Token>
+</wsp:Policy>
+</sp:EndorsingSupportingTokens>
+<sp:Wss11 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:MustSupportRefKeyIdentifier/>
+<sp:MustSupportRefIssuerSerial/>
+<sp:MustSupportRefThumbprint/>
+<sp:MustSupportRefEncryptedKey/>
+<sp:RequireSignatureConfirmation/>
+</wsp:Policy>
+</sp:Wss11>
+</wsp:Policy>
+<wsdl:import namespace="http://xmlns.oracle.com/adf/svc/errors/" location="https://ehxk.fa.em2.oraclecloud.com:443/fscmService/MiscellaneousReceiptService?WSDL=/META-INF/wsdl/ServiceException.wsdl"/>
+<wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://xmlns.oracle.com/oracleas/schema/oracle-fault-11_0" schemaLocation="https://ehxk.fa.em2.oraclecloud.com:443/fscmService/MiscellaneousReceiptService?XSD=/META-INF/oracle-webservices-async-fault-11_0.xsd"/>
+<import namespace="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/" schemaLocation="https://ehxk.fa.em2.oraclecloud.com:443/fscmService/MiscellaneousReceiptService?XSD=/oracle/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/MiscellaneousReceiptService.xsd"/>
+</schema>
+</wsdl:types>
+<wsdl:message name="MiscellaneousReceiptService_createMiscellaneousReceipt">
+<wsdl:part name="parameters" element="types:createMiscellaneousReceipt"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_createMiscellaneousReceiptResponse">
+<wsdl:part name="parameters" element="types:createMiscellaneousReceiptResponse"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_findMiscellaneousReceipt">
+<wsdl:part name="parameters" element="types:findMiscellaneousReceipt"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_findMiscellaneousReceiptResponse">
+<wsdl:part name="parameters" element="types:findMiscellaneousReceiptResponse"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_createMiscellaneousReceiptAsync">
+<wsdl:part name="parameters" element="types:createMiscellaneousReceiptAsync"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_findMiscellaneousReceiptAsync">
+<wsdl:part name="parameters" element="types:findMiscellaneousReceiptAsync"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getDfltObjAttrHints">
+<wsdl:part name="parameters" element="types:getDfltObjAttrHints"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getDfltObjAttrHintsResponse">
+<wsdl:part name="parameters" element="types:getDfltObjAttrHintsResponse"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getServiceLastUpdateTime">
+<wsdl:part name="parameters" element="types:getServiceLastUpdateTime"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getServiceLastUpdateTimeResponse">
+<wsdl:part name="parameters" element="types:getServiceLastUpdateTimeResponse"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getEntityList">
+<wsdl:part name="parameters" element="types:getEntityList"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getEntityListResponse">
+<wsdl:part name="parameters" element="types:getEntityListResponse"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getEntityListAsync">
+<wsdl:part name="parameters" element="types:getEntityListAsync"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getDfltObjAttrHintsAsync">
+<wsdl:part name="parameters" element="types:getDfltObjAttrHintsAsync"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getServiceLastUpdateTimeAsync">
+<wsdl:part name="parameters" element="types:getServiceLastUpdateTimeAsync"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_onFault">
+<wsdl:part name="parameters" element="orafault:Fault"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_createMiscellaneousReceiptAsyncResponse">
+<wsdl:part name="parameters" element="types:createMiscellaneousReceiptAsyncResponse"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_findMiscellaneousReceiptAsyncResponse">
+<wsdl:part name="parameters" element="types:findMiscellaneousReceiptAsyncResponse"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getEntityListAsyncResponse">
+<wsdl:part name="parameters" element="types:getEntityListAsyncResponse"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getDfltObjAttrHintsAsyncResponse">
+<wsdl:part name="parameters" element="types:getDfltObjAttrHintsAsyncResponse"/>
+</wsdl:message>
+<wsdl:message name="MiscellaneousReceiptService_getServiceLastUpdateTimeAsyncResponse">
+<wsdl:part name="parameters" element="types:getServiceLastUpdateTimeAsyncResponse"/>
+</wsdl:message>
+<wsdl:portType name="MiscellaneousReceiptService">
+<wsdl:documentation>
+<ViewInstance xmlns="http://xmlns.oracle.com/adf/svc/metadata/" Name="MiscellaneousReceipt" SDOName="tns:MiscellaneousReceipt" CreateOpName="createMiscellaneousReceipt" FindOpName="findMiscellaneousReceipt"/>
+</wsdl:documentation>
+<wsdl:operation name="createMiscellaneousReceipt">
+<wsdl:input message="tns:MiscellaneousReceiptService_createMiscellaneousReceipt"/>
+<wsdl:output message="tns:MiscellaneousReceiptService_createMiscellaneousReceiptResponse"/>
+<wsdl:fault name="ServiceException" message="errors:ServiceException"/>
+</wsdl:operation>
+<wsdl:operation name="findMiscellaneousReceipt">
+<wsdl:input message="tns:MiscellaneousReceiptService_findMiscellaneousReceipt"/>
+<wsdl:output message="tns:MiscellaneousReceiptService_findMiscellaneousReceiptResponse"/>
+<wsdl:fault name="ServiceException" message="errors:ServiceException"/>
+</wsdl:operation>
+<wsdl:operation name="createMiscellaneousReceiptAsync">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_createMiscellaneousReceiptAsync" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/createMiscellaneousReceiptAsync"/>
+</wsdl:operation>
+<wsdl:operation name="findMiscellaneousReceiptAsync">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_findMiscellaneousReceiptAsync" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/findMiscellaneousReceiptAsync"/>
+</wsdl:operation>
+<wsdl:operation name="getDfltObjAttrHints">
+<wsdl:input message="tns:MiscellaneousReceiptService_getDfltObjAttrHints"/>
+<wsdl:output message="tns:MiscellaneousReceiptService_getDfltObjAttrHintsResponse"/>
+<wsdl:fault name="ServiceException" message="errors:ServiceException"/>
+</wsdl:operation>
+<wsdl:operation name="getServiceLastUpdateTime">
+<wsdl:input message="tns:MiscellaneousReceiptService_getServiceLastUpdateTime"/>
+<wsdl:output message="tns:MiscellaneousReceiptService_getServiceLastUpdateTimeResponse"/>
+<wsdl:fault name="ServiceException" message="errors:ServiceException"/>
+</wsdl:operation>
+<wsdl:operation name="getEntityList">
+<wsdl:input message="tns:MiscellaneousReceiptService_getEntityList"/>
+<wsdl:output message="tns:MiscellaneousReceiptService_getEntityListResponse"/>
+<wsdl:fault name="ServiceException" message="errors:ServiceException"/>
+</wsdl:operation>
+<wsdl:operation name="getEntityListAsync">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_getEntityListAsync" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getEntityListAsync"/>
+</wsdl:operation>
+<wsdl:operation name="getDfltObjAttrHintsAsync">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_getDfltObjAttrHintsAsync" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getDfltObjAttrHintsAsync"/>
+</wsdl:operation>
+<wsdl:operation name="getServiceLastUpdateTimeAsync">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_getServiceLastUpdateTimeAsync" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getServiceLastUpdateTimeAsync"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:portType name="MiscellaneousReceiptServiceResponse">
+<wsdl:operation name="onFault">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_onFault" ns1:Action="http://xmlns.oracle.com/oracleas/schema/oracle-fault-11_0/Fault"/>
+</wsdl:operation>
+<wsdl:operation name="createMiscellaneousReceiptAsyncResponse">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_createMiscellaneousReceiptAsyncResponse" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/createMiscellaneousReceiptAsyncResponse"/>
+</wsdl:operation>
+<wsdl:operation name="findMiscellaneousReceiptAsyncResponse">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_findMiscellaneousReceiptAsyncResponse" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/findMiscellaneousReceiptAsyncResponse"/>
+</wsdl:operation>
+<wsdl:operation name="getEntityListAsyncResponse">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_getEntityListAsyncResponse" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getEntityListAsyncResponse"/>
+</wsdl:operation>
+<wsdl:operation name="getDfltObjAttrHintsAsyncResponse">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_getDfltObjAttrHintsAsyncResponse" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getDfltObjAttrHintsAsyncResponse"/>
+</wsdl:operation>
+<wsdl:operation name="getServiceLastUpdateTimeAsyncResponse">
+<wsdl:input xmlns:ns1="http://www.w3.org/2006/05/addressing/wsdl" message="tns:MiscellaneousReceiptService_getServiceLastUpdateTimeAsyncResponse" ns1:Action="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getServiceLastUpdateTimeAsyncResponse"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="MiscellaneousReceiptServiceSoapHttp" type="tns:MiscellaneousReceiptService">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#wsmtom_policy" wsdl:required="false"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#wss11_saml_or_username_token_with_message_protection_service_policy" wsdl:required="false"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#fast_infoset_service_policy" wsdl:required="false"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#wsaddr_policy" wsdl:required="false"/>
+<wsdl:operation name="createMiscellaneousReceipt">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/createMiscellaneousReceipt"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Output_Policy" wsdl:required="false"/>
+</wsdl:output>
+<wsdl:fault name="ServiceException">
+<soap:fault name="ServiceException" use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Fault_Policy" wsdl:required="false"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="findMiscellaneousReceipt">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/findMiscellaneousReceipt"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Output_Policy" wsdl:required="false"/>
+</wsdl:output>
+<wsdl:fault name="ServiceException">
+<soap:fault name="ServiceException" use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Fault_Policy" wsdl:required="false"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="createMiscellaneousReceiptAsync">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/createMiscellaneousReceiptAsync"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="findMiscellaneousReceiptAsync">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/findMiscellaneousReceiptAsync"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getDfltObjAttrHints">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getDfltObjAttrHints"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Output_Policy" wsdl:required="false"/>
+</wsdl:output>
+<wsdl:fault name="ServiceException">
+<soap:fault name="ServiceException" use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Fault_Policy" wsdl:required="false"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getServiceLastUpdateTime">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getServiceLastUpdateTime"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Output_Policy" wsdl:required="false"/>
+</wsdl:output>
+<wsdl:fault name="ServiceException">
+<soap:fault name="ServiceException" use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Fault_Policy" wsdl:required="false"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getEntityList">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getEntityList"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Output_Policy" wsdl:required="false"/>
+</wsdl:output>
+<wsdl:fault name="ServiceException">
+<soap:fault name="ServiceException" use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Fault_Policy" wsdl:required="false"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getEntityListAsync">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getEntityListAsync"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getDfltObjAttrHintsAsync">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getDfltObjAttrHintsAsync"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getServiceLastUpdateTimeAsync">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getServiceLastUpdateTimeAsync"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceSoapHttpPort_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="MiscellaneousReceiptServiceResponseBinding" type="tns:MiscellaneousReceiptServiceResponse">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#wss11_saml_token_with_message_protection_client_policy" wsdl:required="false"/>
+<wsdl:operation name="onFault">
+<soap:operation soapAction="http://xmlns.oracle.com/oracleas/schema/oracle-fault-11_0/Fault"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceResponse_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="createMiscellaneousReceiptAsyncResponse">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/createMiscellaneousReceiptAsyncResponse"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceResponse_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="findMiscellaneousReceiptAsyncResponse">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/findMiscellaneousReceiptAsyncResponse"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceResponse_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getEntityListAsyncResponse">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getEntityListAsyncResponse"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceResponse_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getDfltObjAttrHintsAsyncResponse">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getDfltObjAttrHintsAsyncResponse"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceResponse_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="getServiceLastUpdateTimeAsyncResponse">
+<soap:operation soapAction="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/getServiceLastUpdateTimeAsyncResponse"/>
+<wsdl:input>
+<soap:body use="literal"/>
+<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#MiscellaneousReceiptServiceResponse_Input_Policy" wsdl:required="false"/>
+</wsdl:input>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="MiscellaneousReceiptService">
+<wsdl:port name="MiscellaneousReceiptServiceSoapHttpPort" binding="tns:MiscellaneousReceiptServiceSoapHttp">
+<soap:address location="https://ehxk.fa.em2.oraclecloud.com:443/fscmService/MiscellaneousReceiptService"/>
+<wsa:EndpointReference xmlns:wsa="http://www.w3.org/2005/08/addressing">
+<wsa:Address xmlns:wsa="http://www.w3.org/2005/08/addressing">https://ehxk.fa.em2.oraclecloud.com:443/fscmService/MiscellaneousReceiptService</wsa:Address>
+<wsid:Identity xmlns:wsid="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+<dsig:KeyInfo xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+<dsig:X509Data>
+<dsig:X509Certificate>MIIDbzCCAlegAwIBAgIGAZw1UdIfMA0GCSqGSIb3DQEBCwUAMFkxEzARBgoJkiaJ k/IsZAEZFgNjb20xFjAUBgoJkiaJk/IsZAEZFgZvcmFjbGUxFTATBgoJkiaJk/Is ZAEZFgVjbG91ZDETMBEGA1UEAxMKQ2xvdWQ5Q0EtMjAeFw0yNjAyMDYyMzM4MDBa Fw0zNjAyMDYyMzM4MDBaMGQxEzARBgNVBAMTCnNzbERvbWFpbnMxDzANBgNVBAMT BkNsb3VkOTE8MDoGA1UEAwwzaWRjcy01YzQ2OTg3M2Y2MjI0ZDRiOTA4NTllOGFh YTFiY2U0Y19laHhrX2luc3RhbmNlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB CgKCAQEAu8KWotOQ8BGBCH0L6Cs3G6xfPFDl9KyuxHLa2OddepNdXvGbg4wTyFKh IS9ajl97hhvqlQu+fJyj62CiftzoAbRCCb3/txzSZsJiTcO+w2mVGG+V3vKLgrAT JOV7KfSSM8h4pF2b+l5TQ5JsSnaZmN+ugl0T/OZ3c5DMI7rlQH1tIKcvT0c0qCxE UgHop+gv5AJZHyvEYFLCarW97PfjwCQUthYozH4b8SpUSbfgwUCko/5nVYYEOVv7 lDw3zi+aWm/t1i+2kzf0HqhO1L+Ntq69R8Tyq0LTCKjiQdebeBHPpRzJyoC8Bs69 VoQJ0YkfbZTQ8NCJPyxB7wxYXm5bgQIDAQABozIwMDAPBgNVHQ8BAf8EBQMDB/gA MB0GA1UdDgQWBBRbke7sVs+LdKW4z9sK494khceG6TANBgkqhkiG9w0BAQsFAAOC AQEADF9IbhxSmPZPI1YalcjkXTktQy4FEZZANtaZhsV4hZ69wQ8SRe3kRGORcvba 831TLNpKt6h/QhsuK/CjaWNtspGC5NLf1exwqcYCPUy8B66Ffr/ZoTU9Prb6CAKW xkUd/VBDNi0lVBwab4Z+XuoZLaYWqrCnmjIyGMNrYYq6yanrsy6L8al9ST78Vv51 Ec2e/ll08814l+yFpZd2lw7a+bVy+7MgQyXE9Kndn8mwEl8LAPXhbmTTMc9XJhvb ZzI57cOhAAMb3BT/sh8h6q/4Oc4diOGksrPjm8UqQi2RKFfc6+WDb22mWkQHJnZI Vr+eEawTChhUh0UxfYbXWCL3ag==</dsig:X509Certificate>
+<dsig:X509IssuerSerial>
+<dsig:X509IssuerName>CN=Cloud9CA-2, DC=cloud, DC=oracle, DC=com</dsig:X509IssuerName>
+<dsig:X509SerialNumber>1770421080607</dsig:X509SerialNumber>
+</dsig:X509IssuerSerial>
+<dsig:X509SubjectName>CN=idcs-5c469873f6224d4b90859e8aaa1bce4c_ehxk_instance, CN=Cloud9, CN=sslDomains</dsig:X509SubjectName>
+<dsig:X509SKI>W5Hu7FbPi3SluM/bCuPeJIXHhuk=</dsig:X509SKI>
+<dsig:X509Certificate>MIIDazCCAlOgAwIBAgIIMdQl7kIMrv0wDQYJKoZIhvcNAQELBQAwWTETMBEGCgmS JomT8ixkARkWA2NvbTEWMBQGCgmSJomT8ixkARkWBm9yYWNsZTEVMBMGCgmSJomT 8ixkARkWBWNsb3VkMRMwEQYDVQQDEwpDbG91ZDlDQS0yMCAXDTE2MDUyMTAyMTgw OVoYDzIxMTYwNDI3MDIxODA5WjBZMRMwEQYKCZImiZPyLGQBGRYDY29tMRYwFAYK CZImiZPyLGQBGRYGb3JhY2xlMRUwEwYKCZImiZPyLGQBGRYFY2xvdWQxEzARBgNV BAMTCkNsb3VkOUNBLTIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDP Zn2VAoMsIfWmIJks9exzK+DXaX6qYyBc12dRqDrRpC48v3CBeBchV/GT2E+mjcDp 8Hzq8oIpwr9W5kwMja4PU3SPd4/0LB6WKbtLfHOnJxLg9EaT992UpbUGHaHlEq4o RAuVvPgDLp5sSspLZYEBKUh4vJXOyLitE1qsXn7mJNXRKTJZvrJKdfbs1dyTge3V 3wk1rwY/wCWMKVgkqCgSzzWCGju8EZWoOrnzlR6BHkA0qZqeV4F7jDW8ucdv+Y20 pOlOiaEbIg/ZFYGrZd5VWjlNvgLfU8P4C/YJLSkkcPHgoet3w4jI0S26efu59rVz gU9VsKnKtnqbDL99t81vAgMBAAGjNTAzMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYD VR0OBBYEFDMA8e55FI5kC12+guIE9xtcIXpFMA0GCSqGSIb3DQEBCwUAA4IBAQC4 5tOVeqHxA8Bo/Rnv1SHHpULge3HyTC1XV9nmUdrj6g/U6rmbA5hVJ5LshgQ77qop O/YsaNHj5Ru1u/+8VOlZWpbn+kt3CDOuBUCe89CKBZT/KWEDkvtNl2qu16gOkhFn uTQk8NsARvwZZ6KtyPDmsbW4Nc/I5fKwPhdTaMjCV6Lh9RCG4kU77lbdwY3SaXlC BXXQyfPWMouCi7z1thJaF3cNGW4tnsibMR5ej9fJ9j6UvShxNgAIgjNDoihPlC6k 0kW3QDR3bBjCHJX47505aIhckojH/eKsP2Or0eE/Ma4WNbndj0IXPE2ae5AVmC8/ GRtwAmnoZPnt3g/I2m5j</dsig:X509Certificate>
+</dsig:X509Data>
+</dsig:KeyInfo>
+</wsid:Identity>
+</wsa:EndpointReference>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>
