@@ -93,29 +93,33 @@ def validate_mandatory_fields(row: dict, row_num: int) -> Tuple[bool, List[str]]
     missing_fields = []
 
     for field_name, error_msg in MANDATORY_FIELDS.items():
-        value = row.get(field_name, "").strip()
-        if not value:
+        value = row.get(field_name, "")
+        # Convert to string and strip to handle various input types
+        value_str = str(value).strip() if value is not None else ""
+        if not value_str:
             missing_fields.append(f"{field_name} ({error_msg})")
             logging.warning(f"Row {row_num}: Missing {field_name} - {error_msg}")
 
     # Validate date formats
     date_fields = ["ReceiptDate", "DepositDate", "GlDate"]
     for date_field in date_fields:
-        value = row.get(date_field, "").strip()
-        if value:
+        value = row.get(date_field, "")
+        value_str = str(value).strip() if value is not None else ""
+        if value_str:
             # Check date format (YYYY-MM-DD or YYYY/MM/DD)
-            if not re.match(r'^\d{4}[-/]\d{2}[-/]\d{2}$', value):
+            if not re.match(r'^\d{4}[-/]\d{2}[-/]\d{2}$', value_str):
                 missing_fields.append(f"{date_field} (Invalid date format, expected YYYY-MM-DD)")
-                logging.warning(f"Row {row_num}: Invalid date format for {date_field}: {value}")
+                logging.warning(f"Row {row_num}: Invalid date format for {date_field}: {value_str}")
 
     # Validate Amount is numeric
-    amount = row.get("Amount", "").strip()
-    if amount:
+    amount = row.get("Amount", "")
+    amount_str = str(amount).strip() if amount is not None else ""
+    if amount_str:
         try:
-            float(amount)
+            float(amount_str)
         except ValueError:
             missing_fields.append("Amount (Must be a valid number)")
-            logging.warning(f"Row {row_num}: Invalid Amount value: {amount}")
+            logging.warning(f"Row {row_num}: Invalid Amount value: {amount_str}")
 
     is_valid = len(missing_fields) == 0
     return is_valid, missing_fields
@@ -127,6 +131,12 @@ def build_soap_payload(row: dict) -> str:
     def normalize_date(date_str: str) -> str:
         return date_str.replace("/", "-") if date_str else ""
 
+    # Safely get and normalize field values to ensure they're strings and stripped
+    def get_field(field_name: str) -> str:
+        value = row.get(field_name, "")
+        # Convert to string and strip whitespace to match validation logic
+        return str(value).strip() if value is not None else ""
+
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope
     xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -136,16 +146,16 @@ def build_soap_payload(row: dict) -> str:
   <soapenv:Body>
     <types:createMiscellaneousReceipt>
       <types:miscellaneousReceipt>
-        <misc:Amount>{row.get("Amount", "")}</misc:Amount>
-        <misc:CurrencyCode>{row.get("CurrencyCode", "")}</misc:CurrencyCode>
-        <misc:ReceiptNumber>{row.get("ReceiptNumber", "")}</misc:ReceiptNumber>
-        <misc:ReceiptDate>{normalize_date(row.get("ReceiptDate", ""))}</misc:ReceiptDate>
-        <misc:DepositDate>{normalize_date(row.get("DepositDate", ""))}</misc:DepositDate>
-        <misc:GlDate>{normalize_date(row.get("GlDate", ""))}</misc:GlDate>
-        <misc:ReceiptMethodName>{row.get("ReceiptMethodName", "")}</misc:ReceiptMethodName>
-        <misc:ReceivableActivityName>{row.get("ReceivableActivityName", "")}</misc:ReceivableActivityName>
-        <misc:BankAccountNumber>{row.get("BankAccountNumber", "")}</misc:BankAccountNumber>
-        <misc:OrgId>{row.get("OrgId", "")}</misc:OrgId>
+        <misc:Amount>{get_field("Amount")}</misc:Amount>
+        <misc:CurrencyCode>{get_field("CurrencyCode")}</misc:CurrencyCode>
+        <misc:ReceiptNumber>{get_field("ReceiptNumber")}</misc:ReceiptNumber>
+        <misc:ReceiptDate>{normalize_date(get_field("ReceiptDate"))}</misc:ReceiptDate>
+        <misc:DepositDate>{normalize_date(get_field("DepositDate"))}</misc:DepositDate>
+        <misc:GlDate>{normalize_date(get_field("GlDate"))}</misc:GlDate>
+        <misc:ReceiptMethodName>{get_field("ReceiptMethodName")}</misc:ReceiptMethodName>
+        <misc:ReceivableActivityName>{get_field("ReceivableActivityName")}</misc:ReceivableActivityName>
+        <misc:BankAccountNumber>{get_field("BankAccountNumber")}</misc:BankAccountNumber>
+        <misc:OrgId>{get_field("OrgId")}</misc:OrgId>
       </types:miscellaneousReceipt>
     </types:createMiscellaneousReceipt>
   </soapenv:Body>
