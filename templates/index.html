@@ -189,7 +189,11 @@
       <div id="drop-zone"
         class="relative border-2 border-dashed border-navy-600 rounded-xl p-6 text-center cursor-pointer
                hover:border-indigo-500 hover:bg-navy-700/30 transition"
+        role="button"
+        aria-label="Upload CSV file — click or drag and drop"
+        tabindex="0"
         onclick="document.getElementById('file-input').click()"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('file-input').click();}"
         ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
         <input id="file-input" type="file" accept=".csv" class="hidden" onchange="handleFileSelect(event)" />
         <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-500 mb-2 block"></i>
@@ -411,7 +415,7 @@ function downloadLogs() {
   const blob = new Blob([text], { type: 'text/plain' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `soap-logs-${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.txt`;
+  a.download = `soap-logs-${filenameTimestamp()}.txt`;
   a.click();
 }
 
@@ -580,6 +584,10 @@ function resetAll() {
 }
 
 // ─── Misc ─────────────────────────────────────────────────────────────────────
+function filenameTimestamp() {
+  return new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+}
+
 function togglePassword() {
   const inp = document.getElementById('password');
   const eye = document.getElementById('pw-eye');

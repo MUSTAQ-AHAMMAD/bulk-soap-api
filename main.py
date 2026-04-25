@@ -51,10 +51,9 @@ async def _broadcast(message: dict):
 def _broadcast_sync(message: dict):
     """Thread-safe broadcast from non-async threads."""
     try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            asyncio.run_coroutine_threadsafe(_broadcast(message), loop)
-    except Exception:
+        loop = asyncio.get_running_loop()
+        asyncio.run_coroutine_threadsafe(_broadcast(message), loop)
+    except RuntimeError:
         pass
 
 
