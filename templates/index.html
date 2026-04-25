@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bulk SOAP Runner — Oracle Fusion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 950: '#060b14', 900: '#0f172a', 800: '#1e293b', 700: '#263548', 600: '#334155' },
+            oracle: { red: '#e74c3c', 'red-dark': '#c0392b' },
+            success: '#22c55e',
+            danger:  '#ef4444',
+            warn:    '#f59e0b',
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #0f172a; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #1e293b; }
+    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+    /* Progress bar */
+    #progress-fill {
+      transition: width 0.4s cubic-bezier(.4,0,.2,1);
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+    }
+    #progress-fill.danger { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+    /* Log lines */
+    .log-line { animation: fadeIn .15s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Card glow on hover */
+    .card { transition: box-shadow .2s; }
+    .card:hover { box-shadow: 0 0 0 1px rgba(99,102,241,.25), 0 4px 24px rgba(0,0,0,.4); }
+
+    /* Pulse dot */
+    .pulse-dot { animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* Drop zone */
+    #drop-zone.drag-over { border-color: #6366f1; background: rgba(99,102,241,.08); }
+
+    /* Spinning icon */
+    .spin { animation: spin .8s linear infinite; }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+    /* Preview table */
+    .preview-table th { background: #263548; }
+    .preview-table tr:nth-child(even) td { background: rgba(255,255,255,.025); }
+    .preview-table td, .preview-table th { border: 1px solid #334155; }
+  </style>
+</head>
+<body class="min-h-screen font-sans text-slate-200">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="sticky top-0 z-50 bg-navy-900/90 backdrop-blur border-b border-navy-600">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-oracle-red flex items-center justify-center shadow-lg">
+        <i class="fa-solid fa-bolt text-white text-sm"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold text-white leading-none">Bulk SOAP Runner</h1>
+        <p class="text-xs text-slate-400 leading-none mt-0.5">Oracle Fusion · Miscellaneous Receipt Processor</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="ws-indicator" class="flex items-center gap-1.5 text-xs text-slate-400">
+        <span class="w-2 h-2 rounded-full bg-slate-500" id="ws-dot"></span>
+        <span id="ws-label">Disconnected</span>
+      </span>
+      <span id="job-badge" class="hidden px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-300">IDLE</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+  <!-- TOP ROW: Config + CSV Upload -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- ── Config Card ─────────────────────────────────────────────── -->
+    <div class="card bg-navy-800 rounded-2xl p-5 border border-navy-600 space-y-4">
+      <div class="flex items-center gap-2 mb-1">
+        <i class="fa-solid fa-gear text-slate-400 text-sm"></i>
+        <h2 class="font-semibold text-white">Configuration</h2>
+      </div>
+
+      <div>
+        <label class="block text-xs text-slate-400 mb-1">Endpoint URL</label>
+        <input id="endpoint" type="url"
+          value="https://ehxk.fa.em2.oraclecloud.com:443/fscmService/MiscellaneousReceiptService"
+          class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-white
+                 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40" />
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Username</label>
+          <input id="username" type="text" placeholder="oracle_user"
+            class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-white
+                   focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40" />
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Password</label>
+          <div class="relative">
+            <input id="password" type="password" placeholder="••••••••"
+              class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 pr-9 text-sm text-white
+                     focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40" />
+            <button onclick="togglePassword()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition">
+              <i id="pw-eye" class="fa-solid fa-eye text-xs"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Delay (sec)</label>
+          <input id="delay" type="number" value="0.3" min="0" step="0.1"
+            class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-white
+                   focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40" />
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Max Workers</label>
+          <input id="max-workers" type="number" value="5" min="1" max="50"
+            class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-white
+                   focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40" />
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Mode</label>
+          <select id="mode"
+            class="w-full bg-navy-900 border border-navy-600 rounded-lg px-3 py-2 text-sm text-white
+                   focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40">
+            <option value="sequential">Sequential</option>
+            <option value="concurrent">Concurrent</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Control Buttons -->
+      <div class="flex gap-3 pt-1">
+        <button id="btn-start" onclick="startJob()"
+          class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-sm
+                 bg-emerald-600 hover:bg-emerald-500 text-white transition active:scale-95 shadow-lg shadow-emerald-900/40">
+          <i class="fa-solid fa-play"></i> Start
+        </button>
+        <button id="btn-stop" onclick="stopJob()" disabled
+          class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-sm
+                 bg-red-700 hover:bg-red-600 text-white transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-stop"></i> Stop
+        </button>
+        <button id="btn-reset" onclick="resetAll()"
+          class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm
+                 bg-slate-700 hover:bg-slate-600 text-white transition active:scale-95">
+          <i class="fa-solid fa-rotate"></i> Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- ── CSV Upload Card ─────────────────────────────────────────── -->
+    <div class="card bg-navy-800 rounded-2xl p-5 border border-navy-600 space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-file-csv text-slate-400 text-sm"></i>
+          <h2 class="font-semibold text-white">CSV Upload</h2>
+        </div>
+        <span id="row-badge" class="hidden px-2.5 py-1 bg-indigo-600/30 border border-indigo-500/40
+                                    text-indigo-300 text-xs rounded-full font-semibold"></span>
+      </div>
+
+      <!-- Drop zone -->
+      <div id="drop-zone"
+        class="relative border-2 border-dashed border-navy-600 rounded-xl p-6 text-center cursor-pointer
+               hover:border-indigo-500 hover:bg-navy-700/30 transition"
+        role="button"
+        aria-label="Upload CSV file — click or drag and drop"
+        tabindex="0"
+        onclick="document.getElementById('file-input').click()"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('file-input').click();}"
+        ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+        <input id="file-input" type="file" accept=".csv" class="hidden" onchange="handleFileSelect(event)" />
+        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-500 mb-2 block"></i>
+        <p class="text-slate-400 text-sm">Drag &amp; drop your CSV here</p>
+        <p class="text-slate-600 text-xs mt-1">or click to browse</p>
+        <div id="file-name" class="hidden mt-3 px-3 py-1.5 bg-indigo-600/20 border border-indigo-500/40
+                                   rounded-lg text-indigo-300 text-xs font-medium">
+        </div>
+      </div>
+
+      <!-- CSV Preview -->
+      <div id="preview-wrap" class="hidden">
+        <p class="text-xs text-slate-500 mb-2 uppercase tracking-wide font-medium">Preview (first 5 rows)</p>
+        <div class="overflow-x-auto rounded-lg max-h-48">
+          <table class="preview-table w-full text-xs text-slate-300 border-collapse">
+            <thead id="preview-head"></thead>
+            <tbody id="preview-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Progress Panel ─────────────────────────────────────────────────── -->
+  <div class="card bg-navy-800 rounded-2xl p-5 border border-navy-600 space-y-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-chart-line text-slate-400 text-sm"></i>
+        <h2 class="font-semibold text-white">Progress</h2>
+      </div>
+      <div class="flex items-center gap-4 text-xs text-slate-400">
+        <span>Speed: <span id="speed-label" class="text-white font-semibold">—</span> rec/s</span>
+        <span>ETA: <span id="eta-label" class="text-white font-semibold">—</span></span>
+      </div>
+    </div>
+
+    <!-- Bar -->
+    <div class="relative h-6 bg-navy-900 rounded-full overflow-hidden">
+      <div id="progress-fill" class="h-full rounded-full" style="width:0%"></div>
+      <span id="progress-pct" class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">0%</span>
+    </div>
+
+    <!-- Stats row -->
+    <div class="grid grid-cols-5 gap-3">
+      <div class="bg-navy-900 rounded-xl p-3 text-center">
+        <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Total</p>
+        <p id="stat-total" class="text-2xl font-bold text-white">0</p>
+      </div>
+      <div class="bg-navy-900 rounded-xl p-3 text-center">
+        <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Processed</p>
+        <p id="stat-processed" class="text-2xl font-bold text-indigo-400">0</p>
+      </div>
+      <div class="bg-navy-900 rounded-xl p-3 text-center">
+        <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">✅ Success</p>
+        <p id="stat-success" class="text-2xl font-bold text-emerald-400">0</p>
+      </div>
+      <div class="bg-navy-900 rounded-xl p-3 text-center">
+        <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">❌ Failed</p>
+        <p id="stat-failed" class="text-2xl font-bold text-red-400">0</p>
+      </div>
+      <div class="bg-navy-900 rounded-xl p-3 text-center">
+        <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">⏳ Remaining</p>
+        <p id="stat-remaining" class="text-2xl font-bold text-amber-400">0</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Log Console ────────────────────────────────────────────────────── -->
+  <div class="card bg-navy-800 rounded-2xl p-5 border border-navy-600 space-y-3">
+    <div class="flex items-center justify-between flex-wrap gap-2">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-terminal text-slate-400 text-sm"></i>
+        <h2 class="font-semibold text-white">Live Log Console</h2>
+        <span id="running-dot" class="hidden pulse-dot w-2 h-2 rounded-full bg-emerald-400"></span>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="clearLogs()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-navy-700 hover:bg-navy-600 text-slate-300
+                 text-xs transition">
+          <i class="fa-solid fa-trash-can"></i> Clear
+        </button>
+        <button onclick="downloadLogs()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-navy-700 hover:bg-navy-600 text-slate-300
+                 text-xs transition">
+          <i class="fa-solid fa-download"></i> Download Logs
+        </button>
+      </div>
+    </div>
+
+    <div id="log-console"
+      class="font-mono text-xs bg-navy-950 rounded-xl p-4 h-64 overflow-y-auto border border-navy-700">
+      <p class="text-slate-600 italic">Waiting for job to start…</p>
+    </div>
+  </div>
+
+  <!-- ── Results Summary (hidden until done) ───────────────────────────── -->
+  <div id="results-panel" class="hidden card bg-navy-800 rounded-2xl p-5 border border-navy-600">
+    <div class="flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-center gap-4">
+        <i class="fa-solid fa-flag-checkered text-2xl text-amber-400"></i>
+        <div>
+          <h2 class="font-bold text-white text-lg">Processing Complete</h2>
+          <p id="results-summary-text" class="text-sm text-slate-400"></p>
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="text-center">
+          <p class="text-3xl font-black text-emerald-400" id="res-success">0</p>
+          <p class="text-xs text-slate-500">Succeeded</p>
+        </div>
+        <div class="text-center">
+          <p class="text-3xl font-black text-red-400" id="res-failed">0</p>
+          <p class="text-xs text-slate-500">Failed</p>
+        </div>
+        <a href="/download-results" id="download-results-btn"
+          class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500
+                 text-white text-sm font-semibold transition shadow-lg shadow-indigo-900/40">
+          <i class="fa-solid fa-file-arrow-down"></i> Download Results CSV
+        </a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<script>
+// ─── State ────────────────────────────────────────────────────────────────────
+let ws = null;
+let logLines = [];
+let isRunning = false;
+let currentTotal = 0;
+
+// ─── WebSocket ────────────────────────────────────────────────────────────────
+function connectWS() {
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  ws = new WebSocket(`${proto}://${location.host}/ws/logs`);
+
+  ws.onopen = () => {
+    setWsIndicator(true);
+    keepAlive();
+  };
+
+  ws.onclose = () => {
+    setWsIndicator(false);
+    setTimeout(connectWS, 3000); // auto-reconnect
+  };
+
+  ws.onerror = () => ws.close();
+
+  ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    handleMessage(msg);
+  };
+}
+
+function keepAlive() {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send('ping');
+  setTimeout(keepAlive, 20000);
+}
+
+function setWsIndicator(connected) {
+  const dot = document.getElementById('ws-dot');
+  const label = document.getElementById('ws-label');
+  dot.className = `w-2 h-2 rounded-full ${connected ? 'bg-emerald-400' : 'bg-slate-500'}`;
+  label.textContent = connected ? 'Connected' : 'Disconnected';
+}
+
+// ─── Message handler ─────────────────────────────────────────────────────────
+function handleMessage(msg) {
+  if (msg.type === 'state') {
+    updateStats(msg);
+    return;
+  }
+
+  if (msg.type === 'log') {
+    appendLog(msg.message, msg.status === 'SUCCESS' ? 'success' : 'error');
+    updateStats(msg);
+    updateProgress(msg.processed, msg.total);
+    updateSpeedEta(msg.speed, msg.remaining);
+  }
+
+  if (msg.type === 'complete' || msg.type === 'stopped') {
+    appendLog(msg.message, 'info');
+    setRunning(false);
+    showResults(msg.success, msg.failed, msg.elapsed, msg.type === 'stopped');
+    updateBadge(msg.type === 'complete' ? 'DONE' : 'STOPPED',
+                msg.type === 'complete' ? 'bg-emerald-700 text-emerald-200' : 'bg-amber-700 text-amber-200');
+  }
+
+  if (msg.type === 'error') {
+    appendLog(msg.message, 'error');
+  }
+}
+
+// ─── Logging ─────────────────────────────────────────────────────────────────
+function appendLog(text, type = 'info') {
+  logLines.push({ text, type });
+  const console_ = document.getElementById('log-console');
+  // Clear placeholder
+  if (console_.querySelector('.italic')) console_.innerHTML = '';
+
+  const colors = { success: 'text-emerald-400', error: 'text-red-400', info: 'text-amber-300', warn: 'text-yellow-400' };
+  const line = document.createElement('div');
+  line.className = `log-line ${colors[type] || 'text-slate-300'}`;
+  line.textContent = text;
+  console_.appendChild(line);
+  console_.scrollTop = console_.scrollHeight;
+}
+
+function clearLogs() {
+  logLines = [];
+  document.getElementById('log-console').innerHTML = '<p class="text-slate-600 italic">Logs cleared.</p>';
+}
+
+function downloadLogs() {
+  const text = logLines.map(l => l.text).join('\n');
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `soap-logs-${filenameTimestamp()}.txt`;
+  a.click();
+}
+
+// ─── Progress & Stats ─────────────────────────────────────────────────────────
+function updateProgress(processed, total) {
+  currentTotal = total;
+  const pct = total > 0 ? Math.round((processed / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+function updateStats(msg) {
+  if (msg.total  !== undefined) { document.getElementById('stat-total').textContent     = msg.total;   currentTotal = msg.total; }
+  if (msg.processed !== undefined) document.getElementById('stat-processed').textContent = msg.processed;
+  if (msg.success !== undefined) document.getElementById('stat-success').textContent    = msg.success;
+  if (msg.failed  !== undefined) document.getElementById('stat-failed').textContent     = msg.failed;
+  const rem = (msg.total || currentTotal) - (msg.processed || 0);
+  document.getElementById('stat-remaining').textContent = rem > 0 ? rem : 0;
+}
+
+function updateSpeedEta(speed, remaining) {
+  document.getElementById('speed-label').textContent = speed !== undefined ? speed : '—';
+  if (remaining !== undefined && remaining > 0) {
+    const m = Math.floor(remaining / 60), s = remaining % 60;
+    document.getElementById('eta-label').textContent = m > 0 ? `${m}m ${s}s` : `${s}s`;
+  } else {
+    document.getElementById('eta-label').textContent = '—';
+  }
+}
+
+// ─── Results summary ─────────────────────────────────────────────────────────
+function showResults(success, failed, elapsed, stopped) {
+  const panel = document.getElementById('results-panel');
+  panel.classList.remove('hidden');
+  document.getElementById('res-success').textContent = success || 0;
+  document.getElementById('res-failed').textContent  = failed  || 0;
+  const verb = stopped ? 'stopped' : 'completed';
+  document.getElementById('results-summary-text').textContent =
+    `Job ${verb} in ${elapsed || '?'}s · ${success || 0} succeeded · ${failed || 0} failed`;
+}
+
+// ─── Running state ────────────────────────────────────────────────────────────
+function setRunning(running) {
+  isRunning = running;
+  document.getElementById('btn-start').disabled = running;
+  document.getElementById('btn-stop').disabled  = !running;
+  document.getElementById('btn-start').innerHTML = running
+    ? '<i class="fa-solid fa-spinner spin"></i> Running…'
+    : '<i class="fa-solid fa-play"></i> Start';
+  document.getElementById('running-dot').classList.toggle('hidden', !running);
+}
+
+function updateBadge(label, cls) {
+  const badge = document.getElementById('job-badge');
+  badge.textContent = label;
+  badge.className = `px-2.5 py-1 rounded-full text-xs font-semibold ${cls}`;
+  badge.classList.remove('hidden');
+}
+
+// ─── CSV Upload ───────────────────────────────────────────────────────────────
+function dragOver(e)  { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
+function dragLeave(e) { document.getElementById('drop-zone').classList.remove('drag-over'); }
+function dropFile(e)  { e.preventDefault(); dragLeave(e); const f = e.dataTransfer.files[0]; if (f) uploadFile(f); }
+function handleFileSelect(e) { if (e.target.files[0]) uploadFile(e.target.files[0]); }
+
+async function uploadFile(file) {
+  const nameEl = document.getElementById('file-name');
+  nameEl.textContent = `📄 ${file.name}`;
+  nameEl.classList.remove('hidden');
+
+  const fd = new FormData();
+  fd.append('file', file);
+
+  try {
+    const res = await fetch('/upload', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.error) { appendLog(`❌ Upload failed: ${data.error}`, 'error'); return; }
+
+    // Row badge
+    const badge = document.getElementById('row-badge');
+    badge.textContent = `${data.total.toLocaleString()} rows`;
+    badge.classList.remove('hidden');
+    document.getElementById('stat-total').textContent = data.total;
+
+    // Preview table
+    renderPreview(data.columns, data.preview);
+    appendLog(`📂 Loaded "${file.name}" — ${data.total} rows`, 'info');
+  } catch (err) {
+    appendLog(`❌ Upload error: ${err}`, 'error');
+  }
+}
+
+function renderPreview(columns, rows) {
+  const wrap = document.getElementById('preview-wrap');
+  const head = document.getElementById('preview-head');
+  const body = document.getElementById('preview-body');
+
+  head.innerHTML = '<tr>' + columns.map(c => `<th class="px-2 py-1.5 text-left text-slate-300 font-semibold whitespace-nowrap">${c}</th>`).join('') + '</tr>';
+  body.innerHTML = rows.map(row =>
+    '<tr>' + columns.map(c => `<td class="px-2 py-1 whitespace-nowrap">${row[c] ?? ''}</td>`).join('') + '</tr>'
+  ).join('');
+
+  wrap.classList.remove('hidden');
+}
+
+// ─── Job Control ──────────────────────────────────────────────────────────────
+async function startJob() {
+  if (isRunning) return;
+  const cfg = {
+    endpoint:    document.getElementById('endpoint').value.trim(),
+    username:    document.getElementById('username').value.trim(),
+    password:    document.getElementById('password').value,
+    delay:       parseFloat(document.getElementById('delay').value) || 0.3,
+    max_workers: parseInt(document.getElementById('max-workers').value) || 5,
+    mode:        document.getElementById('mode').value,
+  };
+  if (!cfg.endpoint) { appendLog('❌ Endpoint URL is required.', 'error'); return; }
+  if (!cfg.username)  { appendLog('❌ Username is required.',     'error'); return; }
+  if (!cfg.password)  { appendLog('❌ Password is required.',     'error'); return; }
+
+  document.getElementById('results-panel').classList.add('hidden');
+  updateProgress(0, currentTotal);
+  updateSpeedEta(0, 0);
+  updateStats({ success: 0, failed: 0, processed: 0 });
+
+  try {
+    const res = await fetch('/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cfg),
+    });
+    const data = await res.json();
+    if (data.error) { appendLog(`❌ ${data.error}`, 'error'); return; }
+    setRunning(true);
+    updateBadge('RUNNING', 'bg-emerald-800 text-emerald-200');
+    appendLog(`🚀 Job started — ${data.total} records to process`, 'info');
+  } catch (err) {
+    appendLog(`❌ Failed to start: ${err}`, 'error');
+  }
+}
+
+async function stopJob() {
+  try {
+    await fetch('/stop', { method: 'POST' });
+    appendLog('⏹ Stop requested — finishing current request…', 'warn');
+  } catch (err) {
+    appendLog(`❌ Stop failed: ${err}`, 'error');
+  }
+}
+
+function resetAll() {
+  if (isRunning) { appendLog('⚠️ Stop the job before resetting.', 'warn'); return; }
+  clearLogs();
+  updateProgress(0, 0);
+  updateStats({ total: 0, processed: 0, success: 0, failed: 0 });
+  updateSpeedEta(0, 0);
+  currentTotal = 0;
+  document.getElementById('row-badge').classList.add('hidden');
+  document.getElementById('preview-wrap').classList.add('hidden');
+  document.getElementById('file-name').classList.add('hidden');
+  document.getElementById('file-input').value = '';
+  document.getElementById('results-panel').classList.add('hidden');
+  document.getElementById('job-badge').classList.add('hidden');
+  document.getElementById('running-dot').classList.add('hidden');
+  appendLog('🔄 Reset complete.', 'info');
+}
+
+// ─── Misc ─────────────────────────────────────────────────────────────────────
+function filenameTimestamp() {
+  return new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+}
+
+function togglePassword() {
+  const inp = document.getElementById('password');
+  const eye = document.getElementById('pw-eye');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    eye.className = 'fa-solid fa-eye-slash text-xs';
+  } else {
+    inp.type = 'password';
+    eye.className = 'fa-solid fa-eye text-xs';
+  }
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+connectWS();
+</script>
+</body>
+</html>
