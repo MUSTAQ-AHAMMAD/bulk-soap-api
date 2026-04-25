@@ -32,6 +32,7 @@ _job_state: Dict[str, Any] = {
 _stop_event = threading.Event()
 _connected_clients: List[WebSocket] = []
 _clients_lock = asyncio.Lock()
+_main_loop: Optional[asyncio.AbstractEventLoop] = None
 
 # ─── WebSocket helpers ────────────────────────────────────────────────────────
 
@@ -50,11 +51,12 @@ async def _broadcast(message: dict):
 
 def _broadcast_sync(message: dict):
     """Thread-safe broadcast from non-async threads."""
-    try:
-        loop = asyncio.get_running_loop()
-        asyncio.run_coroutine_threadsafe(_broadcast(message), loop)
-    except RuntimeError:
-        pass
+    global _main_loop
+    if _main_loop is not None:
+        try:
+            asyncio.run_coroutine_threadsafe(_broadcast(message), _main_loop)
+        except Exception:
+            pass
 
 
 # ─── SOAP logic ───────────────────────────────────────────────────────────────
@@ -331,6 +333,11 @@ async def download_results():
 
 @app.websocket("/ws/logs")
 async def websocket_logs(websocket: WebSocket):
+    global _main_loop
+    # Capture the event loop on first WebSocket connection
+    if _main_loop is None:
+        _main_loop = asyncio.get_running_loop()
+
     await websocket.accept()
     async with _clients_lock:
         _connected_clients.append(websocket)
