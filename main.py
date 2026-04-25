@@ -137,7 +137,19 @@ def build_soap_payload(row: dict) -> str:
         # Convert to string and strip whitespace to match validation logic
         return str(value).strip() if value is not None else ""
 
-    return f"""<?xml version="1.0" encoding="UTF-8"?>
+    # Build XML element only if value is not empty
+    # Oracle Fusion rejects empty XML tags for required fields, so we omit them entirely
+    def xml_element(tag_name: str, field_name: str, is_date: bool = False) -> str:
+        value = get_field(field_name)
+        if is_date:
+            value = normalize_date(value)
+        # Only include the XML element if there's a non-empty value
+        if value:
+            return f"\n        <misc:{tag_name}>{value}</misc:{tag_name}>"
+        return ""
+
+    # Build the payload with conditional elements
+    payload = f"""<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope
     xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
     xmlns:types="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/"
@@ -145,21 +157,13 @@ def build_soap_payload(row: dict) -> str:
   <soapenv:Header/>
   <soapenv:Body>
     <types:createMiscellaneousReceipt>
-      <types:miscellaneousReceipt>
-        <misc:Amount>{get_field("Amount")}</misc:Amount>
-        <misc:CurrencyCode>{get_field("CurrencyCode")}</misc:CurrencyCode>
-        <misc:ReceiptNumber>{get_field("ReceiptNumber")}</misc:ReceiptNumber>
-        <misc:ReceiptDate>{normalize_date(get_field("ReceiptDate"))}</misc:ReceiptDate>
-        <misc:DepositDate>{normalize_date(get_field("DepositDate"))}</misc:DepositDate>
-        <misc:GlDate>{normalize_date(get_field("GlDate"))}</misc:GlDate>
-        <misc:ReceiptMethodName>{get_field("ReceiptMethodName")}</misc:ReceiptMethodName>
-        <misc:ReceivableActivityName>{get_field("ReceivableActivityName")}</misc:ReceivableActivityName>
-        <misc:BankAccountNumber>{get_field("BankAccountNumber")}</misc:BankAccountNumber>
-        <misc:OrgId>{get_field("OrgId")}</misc:OrgId>
+      <types:miscellaneousReceipt>{xml_element("Amount", "Amount")}{xml_element("CurrencyCode", "CurrencyCode")}{xml_element("ReceiptNumber", "ReceiptNumber")}{xml_element("ReceiptDate", "ReceiptDate", is_date=True)}{xml_element("DepositDate", "DepositDate", is_date=True)}{xml_element("GlDate", "GlDate", is_date=True)}{xml_element("ReceiptMethodName", "ReceiptMethodName")}{xml_element("ReceivableActivityName", "ReceivableActivityName")}{xml_element("BankAccountNumber", "BankAccountNumber")}{xml_element("OrgId", "OrgId")}
       </types:miscellaneousReceipt>
     </types:createMiscellaneousReceipt>
   </soapenv:Body>
 </soapenv:Envelope>"""
+
+    return payload
 
 
 def extract_fault(xml_text: str) -> str:
