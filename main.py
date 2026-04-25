@@ -145,19 +145,28 @@ def build_soap_payload(row: dict) -> str:
             value = normalize_date(value)
         # Only include the XML element if there's a non-empty value
         if value:
-            return f"\n        <misc:{tag_name}>{value}</misc:{tag_name}>"
+            return f"\n        <types:{tag_name}>{value}</types:{tag_name}>"
         return ""
 
     # Build the payload with conditional elements
+    # Each parameter is placed on a separate line for clarity and proper API formatting
     payload = f"""<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope
     xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:types="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/"
-    xmlns:misc="http://xmlns.oracle.com/apps/financials/receivables/receipts/miscellaneousReceipts/">
+    xmlns:types="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/">
   <soapenv:Header/>
   <soapenv:Body>
     <types:createMiscellaneousReceipt>
-      <types:miscellaneousReceipt>{xml_element("Amount", "Amount")}{xml_element("CurrencyCode", "CurrencyCode")}{xml_element("ReceiptNumber", "ReceiptNumber")}{xml_element("ReceiptDate", "ReceiptDate", is_date=True)}{xml_element("DepositDate", "DepositDate", is_date=True)}{xml_element("GlDate", "GlDate", is_date=True)}{xml_element("ReceiptMethodName", "ReceiptMethodName")}{xml_element("ReceivableActivityName", "ReceivableActivityName")}{xml_element("BankAccountNumber", "BankAccountNumber")}{xml_element("OrgId", "OrgId")}
+      <types:miscellaneousReceipt>{xml_element("Amount", "Amount")}\
+{xml_element("CurrencyCode", "CurrencyCode")}\
+{xml_element("ReceiptNumber", "ReceiptNumber")}\
+{xml_element("ReceiptDate", "ReceiptDate", is_date=True)}\
+{xml_element("DepositDate", "DepositDate", is_date=True)}\
+{xml_element("GlDate", "GlDate", is_date=True)}\
+{xml_element("ReceiptMethodName", "ReceiptMethodName")}\
+{xml_element("ReceivableActivityName", "ReceivableActivityName")}\
+{xml_element("BankAccountNumber", "BankAccountNumber")}\
+{xml_element("OrgId", "OrgId")}
       </types:miscellaneousReceipt>
     </types:createMiscellaneousReceipt>
   </soapenv:Body>
