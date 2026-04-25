@@ -84,7 +84,13 @@ def build_soap_payload(row: dict) -> str:
     """Build Oracle Fusion createMiscellaneousReceipt SOAP XML from a CSV row."""
     # Normalize date format from YYYY/MM/DD to YYYY-MM-DD if needed
     def normalize_date(date_str: str) -> str:
-        return str(date_str).replace("/", "-") if date_str else ""
+        return date_str.replace("/", "-") if date_str else ""
+
+    # Safely get and normalize field values to ensure they're strings and stripped
+    def get_field(field_name: str) -> str:
+        value = row.get(field_name, "")
+        # Convert to string and strip whitespace to match validation logic
+        return str(value).strip() if value is not None else ""
 
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope
@@ -95,16 +101,16 @@ def build_soap_payload(row: dict) -> str:
   <soapenv:Body>
     <types:createMiscellaneousReceipt>
       <types:miscellaneousReceipt>
-        <misc:Amount>{row.get("Amount", "")}</misc:Amount>
-        <misc:CurrencyCode>{row.get("CurrencyCode", "")}</misc:CurrencyCode>
-        <misc:ReceiptNumber>{row.get("ReceiptNumber", "")}</misc:ReceiptNumber>
-        <misc:ReceiptDate>{normalize_date(row.get("ReceiptDate", ""))}</misc:ReceiptDate>
-        <misc:DepositDate>{normalize_date(row.get("DepositDate", ""))}</misc:DepositDate>
-        <misc:GlDate>{normalize_date(row.get("GlDate", ""))}</misc:GlDate>
-        <misc:ReceiptMethodName>{row.get("ReceiptMethodName", "")}</misc:ReceiptMethodName>
-        <misc:ReceivableActivityName>{row.get("ReceivableActivityName", "")}</misc:ReceivableActivityName>
-        <misc:BankAccountNumber>{row.get("BankAccountNumber", "")}</misc:BankAccountNumber>
-        <misc:OrgId>{row.get("OrgId", "")}</misc:OrgId>
+        <misc:Amount>{get_field("Amount")}</misc:Amount>
+        <misc:CurrencyCode>{get_field("CurrencyCode")}</misc:CurrencyCode>
+        <misc:ReceiptNumber>{get_field("ReceiptNumber")}</misc:ReceiptNumber>
+        <misc:ReceiptDate>{normalize_date(get_field("ReceiptDate"))}</misc:ReceiptDate>
+        <misc:DepositDate>{normalize_date(get_field("DepositDate"))}</misc:DepositDate>
+        <misc:GlDate>{normalize_date(get_field("GlDate"))}</misc:GlDate>
+        <misc:ReceiptMethodName>{get_field("ReceiptMethodName")}</misc:ReceiptMethodName>
+        <misc:ReceivableActivityName>{get_field("ReceivableActivityName")}</misc:ReceivableActivityName>
+        <misc:BankAccountNumber>{get_field("BankAccountNumber")}</misc:BankAccountNumber>
+        <misc:OrgId>{get_field("OrgId")}</misc:OrgId>
       </types:miscellaneousReceipt>
     </types:createMiscellaneousReceipt>
   </soapenv:Body>
