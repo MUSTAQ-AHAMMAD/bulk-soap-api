@@ -70,26 +70,23 @@ def build_soap_payload(row: dict) -> str:
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope
     xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:typ="http://xmlns.oracle.com/apps/financials/receivables/receipts/miscellaneousReceipts/miscellaneousReceiptService/types/"
-    xmlns:mis="http://xmlns.oracle.com/apps/financials/receivables/receipts/miscellaneousReceipts/miscellaneousReceiptService/"
-    xmlns:mis1="http://xmlns.oracle.com/apps/financials/receivables/receipts/miscellaneousReceipts/"
-    xmlns:com="http://xmlns.oracle.com/apps/financials/receivables/shared/commonReceipts/">
+    xmlns:types="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/">
   <soapenv:Header/>
   <soapenv:Body>
-    <typ:createMiscellaneousReceipt>
-      <typ:miscellaneousReceiptDR>
-        <mis1:Amount>{row.get("Amount", "")}</mis1:Amount>
-        <mis1:CurrencyCode>{row.get("CurrencyCode", "")}</mis1:CurrencyCode>
-        <mis1:ReceiptNumber>{row.get("ReceiptNumber", "")}</mis1:ReceiptNumber>
-        <mis1:ReceiptDate>{normalize_date(row.get("ReceiptDate", ""))}</mis1:ReceiptDate>
-        <mis1:DepositDate>{normalize_date(row.get("DepositDate", ""))}</mis1:DepositDate>
-        <mis1:GlDate>{normalize_date(row.get("GlDate", ""))}</mis1:GlDate>
-        <com:ReceiptMethodName>{row.get("ReceiptMethodName", "")}</com:ReceiptMethodName>
-        <mis1:ReceivableActivityName>{row.get("ReceivableActivityName", "")}</mis1:ReceivableActivityName>
-        <mis1:BankAccountNumber>{row.get("BankAccountNumber", "")}</mis1:BankAccountNumber>
-        <mis1:OrgId>{row.get("OrgId", "")}</mis1:OrgId>
-      </typ:miscellaneousReceiptDR>
-    </typ:createMiscellaneousReceipt>
+    <types:createMiscellaneousReceipt>
+      <types:miscellaneousReceipt>
+        <Amount>{row.get("Amount", "")}</Amount>
+        <CurrencyCode>{row.get("CurrencyCode", "")}</CurrencyCode>
+        <ReceiptNumber>{row.get("ReceiptNumber", "")}</ReceiptNumber>
+        <ReceiptDate>{normalize_date(row.get("ReceiptDate", ""))}</ReceiptDate>
+        <DepositDate>{normalize_date(row.get("DepositDate", ""))}</DepositDate>
+        <GlDate>{normalize_date(row.get("GlDate", ""))}</GlDate>
+        <ReceiptMethodName>{row.get("ReceiptMethodName", "")}</ReceiptMethodName>
+        <ReceivableActivityName>{row.get("ReceivableActivityName", "")}</ReceivableActivityName>
+        <BankAccountNumber>{row.get("BankAccountNumber", "")}</BankAccountNumber>
+        <OrgId>{row.get("OrgId", "")}</OrgId>
+      </types:miscellaneousReceipt>
+    </types:createMiscellaneousReceipt>
   </soapenv:Body>
 </soapenv:Envelope>"""
 
@@ -120,7 +117,7 @@ def call_soap_api(row: dict, row_num: int, config: dict):
     payload = build_soap_payload(row)
     headers = {
         "Content-Type": "text/xml; charset=utf-8",
-        "SOAPAction": "",
+        "SOAPAction": "http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/createMiscellaneousReceipt",
     }
     try:
         resp = requests.post(
