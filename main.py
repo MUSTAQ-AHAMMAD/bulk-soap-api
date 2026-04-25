@@ -70,21 +70,22 @@ def build_soap_payload(row: dict) -> str:
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope
     xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:types="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/">
+    xmlns:types="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/"
+    xmlns:misc="http://xmlns.oracle.com/apps/financials/receivables/receipts/miscellaneousReceipts/">
   <soapenv:Header/>
   <soapenv:Body>
     <types:createMiscellaneousReceipt>
       <types:miscellaneousReceipt>
-        <Amount>{row.get("Amount", "")}</Amount>
-        <CurrencyCode>{row.get("CurrencyCode", "")}</CurrencyCode>
-        <ReceiptNumber>{row.get("ReceiptNumber", "")}</ReceiptNumber>
-        <ReceiptDate>{normalize_date(row.get("ReceiptDate", ""))}</ReceiptDate>
-        <DepositDate>{normalize_date(row.get("DepositDate", ""))}</DepositDate>
-        <GlDate>{normalize_date(row.get("GlDate", ""))}</GlDate>
-        <ReceiptMethodName>{row.get("ReceiptMethodName", "")}</ReceiptMethodName>
-        <ReceivableActivityName>{row.get("ReceivableActivityName", "")}</ReceivableActivityName>
-        <BankAccountNumber>{row.get("BankAccountNumber", "")}</BankAccountNumber>
-        <OrgId>{row.get("OrgId", "")}</OrgId>
+        <misc:Amount>{row.get("Amount", "")}</misc:Amount>
+        <misc:CurrencyCode>{row.get("CurrencyCode", "")}</misc:CurrencyCode>
+        <misc:ReceiptNumber>{row.get("ReceiptNumber", "")}</misc:ReceiptNumber>
+        <misc:ReceiptDate>{normalize_date(row.get("ReceiptDate", ""))}</misc:ReceiptDate>
+        <misc:DepositDate>{normalize_date(row.get("DepositDate", ""))}</misc:DepositDate>
+        <misc:GlDate>{normalize_date(row.get("GlDate", ""))}</misc:GlDate>
+        <misc:ReceiptMethodName>{row.get("ReceiptMethodName", "")}</misc:ReceiptMethodName>
+        <misc:ReceivableActivityName>{row.get("ReceivableActivityName", "")}</misc:ReceivableActivityName>
+        <misc:BankAccountNumber>{row.get("BankAccountNumber", "")}</misc:BankAccountNumber>
+        <misc:OrgId>{row.get("OrgId", "")}</misc:OrgId>
       </types:miscellaneousReceipt>
     </types:createMiscellaneousReceipt>
   </soapenv:Body>
