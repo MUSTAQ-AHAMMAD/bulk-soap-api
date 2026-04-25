@@ -100,7 +100,7 @@ def build_soap_payload(row: dict) -> str:
             value = normalize_date(value)
         # Only include the XML element if there's a non-empty value
         if value:
-            return f"\n        <misc:{tag_name}>{value}</misc:{tag_name}>"
+            return f"\n        <types:{tag_name}>{value}</types:{tag_name}>"
         return ""
 
     # Build the payload with conditional elements
@@ -108,8 +108,7 @@ def build_soap_payload(row: dict) -> str:
     payload = f"""<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope
     xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:types="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/"
-    xmlns:misc="http://xmlns.oracle.com/apps/financials/receivables/receipts/miscellaneousReceipts/">
+    xmlns:types="http://xmlns.oracle.com/apps/financials/receivables/receipts/shared/miscellaneousReceiptService/commonService/types/">
   <soapenv:Header/>
   <soapenv:Body>
     <types:createMiscellaneousReceipt>
