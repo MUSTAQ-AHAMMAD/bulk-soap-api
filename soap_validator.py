@@ -104,6 +104,7 @@ def build_soap_payload(row: dict) -> str:
         return ""
 
     # Build the payload with conditional elements
+    # Each parameter is placed on a separate line for clarity and proper API formatting
     payload = f"""<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope
     xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -112,7 +113,16 @@ def build_soap_payload(row: dict) -> str:
   <soapenv:Header/>
   <soapenv:Body>
     <types:createMiscellaneousReceipt>
-      <types:miscellaneousReceipt>{xml_element("Amount", "Amount")}{xml_element("CurrencyCode", "CurrencyCode")}{xml_element("ReceiptNumber", "ReceiptNumber")}{xml_element("ReceiptDate", "ReceiptDate", is_date=True)}{xml_element("DepositDate", "DepositDate", is_date=True)}{xml_element("GlDate", "GlDate", is_date=True)}{xml_element("ReceiptMethodName", "ReceiptMethodName")}{xml_element("ReceivableActivityName", "ReceivableActivityName")}{xml_element("BankAccountNumber", "BankAccountNumber")}{xml_element("OrgId", "OrgId")}
+      <types:miscellaneousReceipt>{xml_element("Amount", "Amount")}\
+{xml_element("CurrencyCode", "CurrencyCode")}\
+{xml_element("ReceiptNumber", "ReceiptNumber")}\
+{xml_element("ReceiptDate", "ReceiptDate", is_date=True)}\
+{xml_element("DepositDate", "DepositDate", is_date=True)}\
+{xml_element("GlDate", "GlDate", is_date=True)}\
+{xml_element("ReceiptMethodName", "ReceiptMethodName")}\
+{xml_element("ReceivableActivityName", "ReceivableActivityName")}\
+{xml_element("BankAccountNumber", "BankAccountNumber")}\
+{xml_element("OrgId", "OrgId")}
       </types:miscellaneousReceipt>
     </types:createMiscellaneousReceipt>
   </soapenv:Body>
