@@ -63,6 +63,10 @@ def _broadcast_sync(message: dict):
 
 def build_soap_payload(row: dict) -> str:
     """Build Oracle Fusion createMiscellaneousReceipt SOAP XML from a CSV row."""
+    # Normalize date format from YYYY/MM/DD to YYYY-MM-DD if needed
+    def normalize_date(date_str: str) -> str:
+        return date_str.replace("/", "-") if date_str else ""
+
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope
     xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -77,9 +81,9 @@ def build_soap_payload(row: dict) -> str:
         <mis1:Amount>{row.get("Amount", "")}</mis1:Amount>
         <mis1:CurrencyCode>{row.get("CurrencyCode", "")}</mis1:CurrencyCode>
         <mis1:ReceiptNumber>{row.get("ReceiptNumber", "")}</mis1:ReceiptNumber>
-        <mis1:ReceiptDate>{row.get("ReceiptDate", "")}</mis1:ReceiptDate>
-        <mis1:DepositDate>{row.get("DepositDate", "")}</mis1:DepositDate>
-        <mis1:GlDate>{row.get("GlDate", "")}</mis1:GlDate>
+        <mis1:ReceiptDate>{normalize_date(row.get("ReceiptDate", ""))}</mis1:ReceiptDate>
+        <mis1:DepositDate>{normalize_date(row.get("DepositDate", ""))}</mis1:DepositDate>
+        <mis1:GlDate>{normalize_date(row.get("GlDate", ""))}</mis1:GlDate>
         <com:ReceiptMethodName>{row.get("ReceiptMethodName", "")}</com:ReceiptMethodName>
         <mis1:ReceivableActivityName>{row.get("ReceivableActivityName", "")}</mis1:ReceivableActivityName>
         <mis1:BankAccountNumber>{row.get("BankAccountNumber", "")}</mis1:BankAccountNumber>
@@ -116,7 +120,7 @@ def call_soap_api(row: dict, row_num: int, config: dict):
     payload = build_soap_payload(row)
     headers = {
         "Content-Type": "text/xml; charset=utf-8",
-        "SOAPAction": "createMiscellaneousReceipt",
+        "SOAPAction": "",
     }
     try:
         resp = requests.post(
